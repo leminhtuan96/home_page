@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\ScreenRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ScreenController extends Controller
 {
+    public $ScreenRepository;
+
+    public function __construct(ScreenRepository $ScreenRepository)
+    {
+        $this->ScreenRepository = $ScreenRepository;
+    }
+
     public function index()
     {
         $screens = DB::table("screen")->paginate(4);
@@ -20,13 +28,7 @@ class ScreenController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->hasFile('file')) {
-            $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
-            $path = $request->file('file')->storeAs("images", $fileName, "public");
-        } else {
-            $path = "images/anh.jpg";
-        }
-        $request->validate([
+        $validate = $request->validate([
             "file" => "required",
             "name" => "required",
         ], [
@@ -34,11 +36,7 @@ class ScreenController extends Controller
             'name.required' => 'không được để trống',
         ]);
 
-        $screen =[
-            'file'=>$path ?: null,
-            'name'=>$request->name,
-        ];
-        DB::table('screen')->insert($screen);
+        $this->ScreenRepository->store($request, $validate);
         return redirect()->route('index');
     }
 
