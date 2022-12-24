@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Screen extends Model
 {
     protected $table = 'screen';
+    protected $fillable = [
+        'name',
+        'file',
+    ];
     use HasFactory;
 
 }

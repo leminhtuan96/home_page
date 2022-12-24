@@ -1,5 +1,5 @@
 @extends('welcome')
-<form action="" method="post" enctype="multipart/form-data">
+<form action="{{ route('screen-records.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     @error('msg')
     <div class="alert alert-danger text-center">{{ $message }}</div>

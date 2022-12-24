@@ -1,7 +1,8 @@
 @extends('welcome')
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -11,7 +12,7 @@
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="{{route("screen-records.create")}}">Create</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
@@ -36,8 +37,8 @@
 </nav>
 <body>
 <div class="container mt-4">
-    <h1 class="text-center">Danh sách file</h1>
-    <a onclick="change()" href="{{route("create")}}" type="button" class="btn btn-danger">Rec</a>
+    <h1 class="text-center">File List</h1>
+    <input onclick="change()" id="myButton" type="button" value="REC" class="btn btn-danger">
 
     <table class="table table-striped mt-4 text-center">
         <thead>
@@ -49,10 +50,10 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($screens as $key=>$screen)
+        @foreach($screenRecords as $key=>$screen)
             <tr>
                 <td>{{$key+1}}</td>
-                <td><img src="{{asset('storage/'.$screen->file)}}" width="100px" height="70" alt=""></td>
+                <td><img src="{{'storage/'.$screen->file}}" width="100px" height="70" alt=""></td>
                 <td>{{$screen->name}}</td>
             </tr>
         @endforeach
@@ -61,11 +62,14 @@
 </div>
 </body>
 <script>
-    function change() // no ';' here
+    function change () // no ';' here
     {
-        var elem = document.getElementById("myButton1");
-        if (elem.value=="Close Curtain") elem.value = "Open Curtain";
-        else elem.value = "Close Curtain";
+        var elem = document.getElementById('myButton')
+        if (elem.value == 'REC') 
+        {elem.value = 'STOP'}
+        else
+        if (elem.value == 'STOP') 
+        {elem.value = 'REC'}
     }
 </script>
 </html>

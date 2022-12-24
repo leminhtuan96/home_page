@@ -6,26 +6,28 @@ use App\Models\Screen;
 
 class ScreenRepository extends BaseRepository
 {
+    protected $screen;
 
-    public function getModel()
+    const PAGINATE = 10;
+
+    public function __construct(Screen $screen)
     {
-        return Screen::class;
+        $this->screen = $screen;
     }
 
-    public function store($request)
+    public function store(array $data)
     {
-        if ($request->hasFile('file')) {
-            $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
-            $path = $request->file('file')->storeAs("images", $fileName, "public");
-        } else {
-            $path = "images/anh.jpg";
+        return $this->screen->create($data);
+    }
+
+    public function getAll($paginate = true)
+    {
+        if ($paginate) {
+            return $this->screen->paginate(self::PAGINATE);
         }
 
+        return $this->screen->all();
 
-        $screen = new Screen();
-        $screen->name = $request->name;
-        $screen->file = $path;
-        $screen->save();
     }
 
 }

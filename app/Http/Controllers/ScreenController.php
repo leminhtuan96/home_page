@@ -2,23 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ScreenRecordRequest;
 use App\Repositories\ScreenRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ScreenController extends Controller
 {
-    public $ScreenRepository;
+    public $screenRepository;
 
-    public function __construct(ScreenRepository $ScreenRepository)
+    public function __construct(ScreenRepository $screenRepository)
     {
-        $this->ScreenRepository = $ScreenRepository;
+        $this->screenRepository = $screenRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $screens = DB::table("screen")->paginate(4);
-        return view("screen", compact("screens"));
+        // $search = $request['search']??"";
+        // if ($search != "")
+        // {
+        //     $screenRecords = $this->screenRepository->where('name','=',$search)->get();
+        // }
+        // else{
+        // }
+        $screen = $this->screenRepository;
+        $screenRecords = $screen->getAll();
+
+        return view("screen", compact("screenRecords"));
     }
 
     public function create()
@@ -26,21 +37,26 @@ class ScreenController extends Controller
         return view('create');
     }
 
-    public function store(Request $request)
+    public function store(ScreenRecordRequest $request)
     {
-        $validate = $request->validate([
-            "file" => "required",
-            "name" => "required",
-        ], [
-            'file.required' => 'không được để trống',
-            'name.required' => 'không được để trống',
-        ]);
+        $disk = Storage::disk('public');
+        $data = [];
+        if ($request->hasFile('file')) {
+            $fileName = $request->file('file')->getClientOriginalName();
+            $filePath = $disk->putFileAs('screenRecords', $request->file('file'), $fileName);
+            $data = [
+                'name' => $fileName,
+                'file' => $filePath
+            ];
+        }
 
-        $this->ScreenRepository->store($request, $validate);
+        $this->screenRepository->store($data);
+
         return redirect()->route('index');
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $search = $request->input('search');
         $screen = DB::table('screen')->query()
             ->orderByDesc('screen.id')

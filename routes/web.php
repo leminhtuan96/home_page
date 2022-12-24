@@ -19,7 +19,5 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/', [ScreenController::class,"index"])->name("index");
-Route::get('/create', [ScreenController::class,"create"])->name("create");
-Route::post('/create', [ScreenController::class,"store"])->name("store");
-
-Route::get("/search/", [ScreenController::class, 'search'])->name('search');
+Route::resource('screen-records', ScreenController::class)->except(['index']);
+Route::get("screen-records/search/", [ScreenController::class, 'search'])->name('search');
