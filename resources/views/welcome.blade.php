@@ -9,16 +9,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 <script>
-    function change () // no ';' here
-    {
-        var elem = document.getElementById('myButton')
-        if (elem.value == 'REC') 
-        {
-elem.addEventListener("click", async function () {
+    // function change () // no ';' here
+    // { 
+    //     var elem = document.getElementById('myButton')
+    //     if (elem.value == 'REC') 
+    //     {elem.value = 'STOP'}
+    //     else
+    //     if (elem.value == 'STOP') 
+    //     {elem.value = 'REC'}
+    // }
+
+    let btn = document.getElementById('myButton')
+    btn.addEventListener("click", async function () {
 let stream = await navigator.mediaDevices.getDisplayMedia({
 video: true
 })
-//needed for better browser support
 const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp9")
 ? "video/webm; codecs=vp9"
 : "video/webm"
@@ -41,13 +46,10 @@ a.href = url
 a.download = 'video.webm'
 a.click()
 })
-//we have to start the recorder manually
 mediaRecorder.start()
-})}
-        else
-        if (elem.value == 'STOP') 
-        {elem.value = 'REC'}
-    }
+})
+
+    
 
 
 
