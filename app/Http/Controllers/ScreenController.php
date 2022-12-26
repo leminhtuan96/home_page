@@ -19,7 +19,7 @@ class ScreenController extends Controller
 
     public function index(Request $request)
     {
-        // $search = $request['search']??"";
+        $search = $request['search']??"";
         // if ($search != "")
         // {
         //     $screenRecords = $this->screenRepository->where('name','=',$search)->get();
@@ -45,7 +45,7 @@ class ScreenController extends Controller
             $fileName = $request->file('file')->getClientOriginalName();
             $filePath = $disk->putFileAs('screenRecords', $request->file('file'), $fileName);
             $data = [
-                'name' => $fileName,
+                'name' => $request['name'],
                 'file' => $filePath
             ];
         }
@@ -61,7 +61,7 @@ class ScreenController extends Controller
         $screen = DB::table('screen')->query()
             ->orderByDesc('screen.id')
             ->select("screen.*")
-            ->where('rooms.name','LIKE',"%{$search}%")->get();
+            ->where('screen.name','LIKE',"%{$search}%")->get();
         return view("index", compact("screen"));
     }
 
